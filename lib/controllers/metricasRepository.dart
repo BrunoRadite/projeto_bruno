@@ -2,9 +2,6 @@ import 'dart:collection';
 import 'package:get/get.dart';
 import '/models/metricasModel.dart';
 import '/database/db_firestore.dart';
-
-//TODO: Implementar o AuthService conforme o vídeo
-//import '/Authenticacao/services/auth_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MetricasRepository extends GetxController {
@@ -12,12 +9,9 @@ class MetricasRepository extends GetxController {
     MetricasPrincipais(
       idMetrica: "123312312",
       nomeMetrica: 'Número de participantes',
-      meta: 15,
-      realizado: 5,
     )
   ].obs;
   late FirebaseFirestore db;
-  //late AuthService auth; //TODO: Aqui tem que ser o AuthService que temos que ver como funciona.
 
   MetricasRepository() {
     _startRepository();
@@ -39,11 +33,7 @@ class MetricasRepository extends GetxController {
         'metricasPrincipais').get();
     for (var doc in snapshot.docs) {
       MetricasPrincipais table = MetricasPrincipais(
-          idMetrica: doc['idMetrica'],
-          nomeMetrica: doc['nomeMetrica'],
-          meta: doc['meta'],
-          realizado: doc['realizado']);
-
+          idMetrica: doc['idMetrica'], nomeMetrica: doc['nomeMetrica']);
       _lista.add(table);
     }
     //}
@@ -66,8 +56,6 @@ class MetricasRepository extends GetxController {
             'metricasPrincipais').doc(metrica.idMetrica.toString()).set({
           'idMetrica': metrica.idMetrica,
           'nomeMetrica': metrica.nomeMetrica,
-          'meta': metrica.meta,
-          'realizado': metrica.realizado,
         });
       }
     });
@@ -99,10 +87,10 @@ class MetricasRepository extends GetxController {
         .delete();
     _lista.remove(metrica);
   }
-
   removeMetrica(String idMetrica) async {
+
     await db
-        //.collection('objetivoUsuario/${auth.usuario!.uid}/objetivosPrincipais')
+    //.collection('objetivoUsuario/${auth.usuario!.uid}/objetivosPrincipais')
         .collection('metricasPrincipais')
         .doc(idMetrica)
         .delete();
@@ -110,30 +98,16 @@ class MetricasRepository extends GetxController {
     _lista.removeWhere((element) => element.idMetrica == idMetrica);
   }
 
-  void atualizaMetrica(String idMetrica, String nomeMetricaAtualizado) async {
+  void atualizaMetrica(String idMetrica, String nomeMetricaAtualizado) async{
     int indice = _lista.indexWhere((element) => element.idMetrica == idMetrica);
     _lista[indice].nomeMetrica = nomeMetricaAtualizado;
 
     await db
-        //.collection('objetivoUsuario/${auth.usuario!.uid}/objetivosPrincipais')
+    //.collection('objetivoUsuario/${auth.usuario!.uid}/objetivosPrincipais')
         .collection('metricasPrincipais')
         .doc(idMetrica)
         .update({
       'nomeMetrica': nomeMetricaAtualizado,
-    });
-    sincronizaListaMetricas();
-  }
-
-  void travarMeta(String idMetrica, double metaTravada) async {
-    int indice = _lista.indexWhere((element) => element.idMetrica == idMetrica);
-    _lista[indice].meta = metaTravada;
-
-    await db
-        //.collection('objetivoUsuario/${auth.usuario!.uid}/objetivosPrincipais')
-        .collection('metricasPrincipais')
-        .doc(idMetrica)
-        .update({
-      'meta': metaTravada,
     });
     sincronizaListaMetricas();
   }

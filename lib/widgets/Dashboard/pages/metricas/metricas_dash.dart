@@ -1,9 +1,12 @@
 import 'package:get/get.dart';
 import '/utils/paleta_cores.dart';
+import '/models/metricasModel.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import '/widgets/Dashboard/app_bar/custom_text.dart';
 import '/widgets/Dashboard/controller/controllers_dash.dart';
+import '/widgets/Dashboard/pages/metricas/dropDownMetricas.dart';
+import '/widgets/Dashboard/pages/resultados/dropDownObjetivo.dart';
 
 class MetricasTable extends StatefulWidget {
   const MetricasTable({Key? key}) : super(key: key);
@@ -15,14 +18,15 @@ class MetricasTable extends StatefulWidget {
 class _MetricasTableState extends State<MetricasTable> {
   TextEditingController newMetrica = TextEditingController();
   TextEditingController idMetrica = TextEditingController();
-
-  String idProjeto = "2qweqw23133";
+  TextEditingController unidade = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-
     ControllerProjetoRepository controllerProjetoRepository =
         Get.find<ControllerProjetoRepository>();
+
+    // var metricasController = controllerProjetoRepository.listaMetricas;
+    // var resultadosController = controllerProjetoRepository.listaResultados;
 
     return Container(
       margin: EdgeInsets.only(bottom: 30),
@@ -54,6 +58,22 @@ class _MetricasTableState extends State<MetricasTable> {
             ),
           ),
           SizedBox(height: 20, width: 10),
+          TextField(
+            controller: unidade,
+            decoration: InputDecoration(
+              labelText: "Unidade da metrica",
+              suffixIcon: Icon(Icons.data_usage_outlined),
+            ),
+          ),
+          SizedBox(height: 40, width: 10),
+          CustomText(
+              text: "A métrica pertence a qual resultado ?",
+              color: PaletaCores.corLightGrey,
+              weight: FontWeight.bold),
+          SizedBox(height: 20, width: 10),
+          DropDownMetrica(),
+          SizedBox(height: 20, width: 10),
+          SizedBox(height: 30, width: 10),
           Padding(
             padding: const EdgeInsets.only(top: 14.0, bottom: 18.0),
             child: Row(
@@ -108,7 +128,8 @@ class _MetricasTableState extends State<MetricasTable> {
                         children: [
                           Expanded(
                             child: CustomText(
-                                text: controllerProjetoRepository.listaMetricas[index].nomeMetrica),
+                                text: controllerProjetoRepository
+                                    .listaMetricas[index].nomeMetrica),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(right: 8.0),
@@ -123,6 +144,9 @@ class _MetricasTableState extends State<MetricasTable> {
                                   idMetrica.text = controllerProjetoRepository
                                       .listaMetricas[index].idMetrica
                                       .toString();
+                                  unidade.text = controllerProjetoRepository
+                                      .listaMetricas[index].unidadeMedida
+                                      .toString();
                                 }),
                           ),
                           Padding(
@@ -132,8 +156,8 @@ class _MetricasTableState extends State<MetricasTable> {
                                 splashRadius: 20,
                                 icon: Icon(Icons.delete),
                                 onPressed: () {
-                                  idMetrica.text =
-                                  controllerProjetoRepository.listaMetricas[index].idMetrica!;
+                                  idMetrica.text = controllerProjetoRepository
+                                      .listaMetricas[index].idMetrica!;
                                   showDialog(
                                     context: context,
                                     builder: (ctx) => buildAlertDialog(),
@@ -160,8 +184,8 @@ class _MetricasTableState extends State<MetricasTable> {
       actions: [
         TextButton(
             onPressed: () {
-
-              Get.find<ControllerProjetoRepository>().removeMetrica(idProjeto, idMetrica.text);
+              Get.find<ControllerProjetoRepository>()
+                  .removeMetrica(idMetrica.text);
               newMetrica.text = '';
               Get.back();
             },
@@ -193,17 +217,39 @@ class _MetricasTableState extends State<MetricasTable> {
         ),
         onPressed: () {
           var controlador = Get.find<ControllerProjetoRepository>();
-          if (operacao == 1) {
-            controlador.addOneMetric(idProjeto, newMetrica.text);
-            newMetrica.text = "";
-          } else if (operacao == 2) {
-            controlador.sincronizaListaMetricas();
-          } else if (operacao == 3) {
-            controlador.atualizaMetrica(idProjeto, idMetrica.text, newMetrica.text);
-            newMetrica.text = '';
-            idMetrica.text = '';
+          var resultadoPai = Get.find<DropObjetivoEResultado>().result.string;
+          if (controlador.idProjeto.value != '') {
+            if (operacao == 1) {
+              if (newMetrica.text != '')
+                controlador.addOneMetric(newMetrica.text,
+                    idResultado: resultadoPai);
+              newMetrica.text = "";
+            } else if (operacao == 2) {
+              controlador.atualizaTudo(controlador.idProjeto.string);
+            } else if (operacao == 3) {
+              if (newMetrica.text != '')
+                controlador.atualizaMetrica(idMetrica.text, newMetrica.text,
+                    unidade: unidade.text, idResultado: resultadoPai);
+              newMetrica.text = '';
+              idMetrica.text = '';
+              unidade.text = '';
+            } else {
+              debugPrint("Opção inválida no textfield Metricas");
+            }
           } else {
-            debugPrint("Opção inválida no textfield Metricas");
+            showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                        title: Text("Nenhum Projeto Selecionado"),
+                        content: Text(
+                            "Va no menu projetos, selecione um projeto e tente novamente"),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              child: Text("OK")),
+                        ]));
           }
         },
         child: CustomText(

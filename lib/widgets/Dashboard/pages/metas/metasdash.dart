@@ -1,10 +1,10 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import '/widgets/Dashboard/pages/metas/meta.dart';
+import '/widgets/Dashboard/pages/metas/tela_de_escolhas_meta.dart';
 import '/widgets/Dashboard/app_bar/custom_text.dart';
-import '../../controller/controllers_dash.dart';
+import '/widgets/Dashboard/controller/controllers_dash.dart';
 import '/widgets/Dashboard/pages/metas/metasPageDash.dart';
 import '/widgets/Dashboard/responsividade/reposinvidade_dash.dart';
-import 'package:get/get.dart';
 
 class MetasPageDash extends StatelessWidget {
   @override
@@ -27,7 +27,7 @@ class MetasPageDash extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: ListView(children: [MetasTable()]),
+          child: TelaEscolhas(),
         ),
       ],
     );

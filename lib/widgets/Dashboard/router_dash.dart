@@ -1,9 +1,6 @@
-import 'package:get/get.dart';
-import 'package:flutter/material.dart';
-import 'package:plataforma_gox/widgets/Dashboard/pages/objetivos/objetivos_page_dash.dart';
 import '/screens/home_web.dart';
+import 'package:flutter/material.dart';
 import '/widgets/Dashboard/routes_dash.dart';
-import '/screens/projeto_pagina_principal.dart';
 import '/widgets/Dashboard/pages/metas/metasdash.dart';
 import '/widgets/Dashboard/pages/donos/donospage.dart';
 import '/widgets/Dashboard/pages/ajuda/menu_ajuda.dart';
@@ -11,7 +8,7 @@ import '/widgets/Dashboard/pages/clients/clients_dash.dart';
 import '/widgets/Dashboard/pages/overview/overview_dash.dart';
 import '/widgets/Dashboard/pages/metricas/metricaspage.dart';
 import '/widgets/Dashboard/pages/planosdeAcao/planos_dash.dart';
-
+import '/widgets/Dashboard/pages/objetivos/objetivos_page_dash.dart';
 import '/widgets/Dashboard/pages/resultados/resultados_dash.dart';
 import '/widgets/Dashboard/pages/authentication/cadastro_cliente_gerenciador.dart';
 
@@ -38,7 +35,7 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
     case PlanodeAcaoPageRouteDash:
       return _getPageRoute(PlanosPageDash());
     case ProjetoPageRouteDash:
-      return _getPageRoute(HomeWeb());
+      return _getPageRoute(HomeWeb(tipo: 'admin'));
 
     default:
       return _getPageRoute(OverViewPageDash());

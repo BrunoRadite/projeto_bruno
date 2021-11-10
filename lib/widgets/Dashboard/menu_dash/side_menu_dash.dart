@@ -1,10 +1,9 @@
 import 'package:get/get.dart';
-import '/widgets/Dashboard/controller/controllers_dash.dart';
 import '/utils/paleta_cores.dart';
 import 'package:flutter/material.dart';
 import '/widgets/Dashboard/routes_dash.dart';
 import '/widgets/Dashboard/app_bar/custom_text.dart';
-
+import '/widgets/Dashboard/controller/controllers_dash.dart';
 import '/widgets/Dashboard/menu_dash/side_menu_item_dash.dart';
 import '/widgets/Dashboard/responsividade/reposinvidade_dash.dart';
 
@@ -46,12 +45,8 @@ class SideMenuDash extends StatelessWidget {
                 )
               ],
             ),
-          SizedBox(
-            height: 40,
-          ),
-          Divider(
-            color: PaletaCores.corLightGrey.withOpacity(.1),
-          ),
+          SizedBox(height: 40),
+          Divider(color: PaletaCores.corLightGrey.withOpacity(.1)),
           Column(
             mainAxisSize: MainAxisSize.min,
             children: sideMenuItems

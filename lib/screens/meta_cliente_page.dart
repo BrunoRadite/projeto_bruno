@@ -1,12 +1,13 @@
-import 'package:data_table_2/data_table_2.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '/controllers/metricasRepository.dart';
+import '/models/metricasModel.dart';
+import '/screens/anexos_page.dart';
 import '/utils/paleta_cores.dart';
+
+import 'package:flutter/material.dart';
+
+import 'package:data_table_2/data_table_2.dart';
 import '/widgets/Dashboard/app_bar/custom_text.dart';
 import '/widgets/Dashboard/controller/controllers_dash.dart';
-import '/controllers/dados_controller.dart';
-import 'package:provider/provider.dart';
 
 class TelaMeta extends StatefulWidget {
   const TelaMeta({Key? key}) : super(key: key);
@@ -17,14 +18,15 @@ class TelaMeta extends StatefulWidget {
 
 class _TelaMetaState extends State<TelaMeta> {
   String _dataVencimento = "";
-  MetricasRepository listaMetricas = Get.find<MetricasRepository>();
+  ControllerProjetoRepository listaMetricas =
+      Get.find<ControllerProjetoRepository>();
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ObjectiveController>(
-        builder: (context, controller, widget) {
-      return Visibility(
-        visible: controller.visivel,
+    var mandalaController = Get.find<ControllerProjetoRepository>();
+    return Obx(
+      () => Visibility(
+        visible: mandalaController.visivel.value,
         child: Padding(
           padding: const EdgeInsets.only(top: 20.0),
           child: Container(
@@ -34,7 +36,8 @@ class _TelaMetaState extends State<TelaMeta> {
               children: [
                 Row(
                   children: [
-                    Text("Metas"),
+                    Text("Metas",
+                        style: TextStyle(color: PaletaCores.textColor)),
                     SizedBox(
                       width: 20,
                     ),
@@ -50,7 +53,8 @@ class _TelaMetaState extends State<TelaMeta> {
                     SizedBox(
                       width: 20,
                     ),
-                    Text("Anexos"),
+                    Text("Anexos",
+                        style: TextStyle(color: PaletaCores.textColor)),
                     SizedBox(
                       width: 20,
                     ),
@@ -59,7 +63,7 @@ class _TelaMetaState extends State<TelaMeta> {
                       child: ElevatedButton(
                         child: Icon(Icons.attach_file),
                         onPressed: () {
-                          Get.to(MetaCliente());
+                          Get.to(AnexoPage());
                         },
                       ),
                     ),
@@ -69,8 +73,8 @@ class _TelaMetaState extends State<TelaMeta> {
             ),
           ),
         ),
-      );
-    });
+      ),
+    );
   }
 }
 
@@ -82,10 +86,10 @@ class MetaCliente extends StatefulWidget {
 }
 
 class _MetaClienteState extends State<MetaCliente> {
-  List<TextEditingController> controladorRealizado = <TextEditingController>[];
-  addTextMeta() {
-    controladorRealizado.add(new TextEditingController());
-  }
+  List<TextEditingController> controladorRealizado1 = <TextEditingController>[];
+  List<TextEditingController> controladorRealizado2 = <TextEditingController>[];
+  List<TextEditingController> controladorRealizado3 = <TextEditingController>[];
+  List<TextEditingController> controladorRealizado4 = <TextEditingController>[];
 
   @override
   Widget build(BuildContext context) {
@@ -96,22 +100,27 @@ class _MetaClienteState extends State<MetaCliente> {
 
     ControllerProjetoRepository listaMetricas =
         Get.find<ControllerProjetoRepository>();
+    var lm = listaMetricas.listaMetricas.where((element) =>
+        element.idResultado == listaMetricas.ultimoResultadoClicado.value);
 
-    listaMetricas.listaMetricas.forEach((element) {
-      controladorRealizado.add(new TextEditingController());
+    List<MetricasPrincipais> metricas = <MetricasPrincipais>[].obs;
+    if (listaMetricas.ultimoNivelClicado.value == 3) {
+      for (var m in lm) {
+        metricas.add(m);
+      }
+    } else if (listaMetricas.ultimoNivelClicado.value == 2) {
+      metricas.clear();
+    }
+
+    metricas.forEach((element) {
+      controladorRealizado1.add(new TextEditingController());
+      controladorRealizado2.add(new TextEditingController());
+      controladorRealizado3.add(new TextEditingController());
+      controladorRealizado4.add(new TextEditingController());
     });
 
     //String meta = '';
     editavel.obs;
-
-    gerarProgresso(double realizado, double meta) {
-      if (realizado != 0 && meta != 0) {
-        double progresso = (realizado / meta) * 100;
-        return progresso;
-      } else {
-        return 0;
-      }
-    }
 
     return Scaffold(
       body: Center(
@@ -165,36 +174,45 @@ class _MetaClienteState extends State<MetaCliente> {
                             size: ColumnSize.L,
                           ),
                           DataColumn2(
-                            label: Text('Realizado'),
+                            label: Text('Realizado(q1)'),
                             size: ColumnSize.M,
                           ),
                           DataColumn2(
-                            label: Text('Meta(previsto)'),
+                            label: Text('Realizado(q2)'),
                             size: ColumnSize.M,
                           ),
                           DataColumn2(
-                            label: Text('Progresso'),
+                            label: Text('Realizado(q3)'),
+                            size: ColumnSize.M,
+                          ),
+                          DataColumn2(
+                            label: Text('Realizado(q4)'),
+                            size: ColumnSize.M,
+                          ),
+                          DataColumn2(
+                            label: Text('Metas(previstos)'),
+                            size: ColumnSize.M,
+                          ),
+                          DataColumn2(
+                            label: Text('Progresso por quarter'),
                             size: ColumnSize.M,
                           ),
                         ],
                         rows: List<DataRow>.generate(
-                          listaMetricas.listaMetricas.length,
+                          metricas.length,
                           (index) => DataRow(
                             cells: [
                               DataCell(
-                                CustomText(
-                                    text: listaMetricas
-                                        .listaMetricas[index].nomeMetrica),
+                                CustomText(text: metricas[index].nomeMetrica),
                               ),
                               DataCell(Row(
                                 children: [
-                                  SizedBox(width: 25),
                                   Container(
                                     width: 40,
                                     child: TextField(
                                       keyboardType: TextInputType.number,
                                       enabled: editavel,
-                                      controller: controladorRealizado[index],
+                                      controller: controladorRealizado1[index],
 
                                       // onChanged: (text) {
                                       //   meta = text;
@@ -202,17 +220,16 @@ class _MetaClienteState extends State<MetaCliente> {
                                     ),
                                   ),
                                   IconButton(
-                                    icon: Icon(Icons.save),
+                                    icon: Icon(Icons.lock, size: 20),
                                     onPressed: () {
-                                      idMetrica.text = listaMetricas
-                                          .listaMetricas[index].idMetrica
-                                          .toString();
+                                      idMetrica.text =
+                                          metricas[index].idMetrica.toString();
                                       Get.find<ControllerProjetoRepository>()
                                           .atualizarRealizado(
-                                              '2qweqw23133',
+                                              1,
                                               idMetrica.text,
                                               double.parse(
-                                                  controladorRealizado[index]
+                                                  controladorRealizado1[index]
                                                       .text));
                                       // (idMetrica.text,
                                       //     double.parse(controladorMeta[index].text));
@@ -220,28 +237,158 @@ class _MetaClienteState extends State<MetaCliente> {
                                     },
                                   ),
                                   IconButton(
-                                      icon: Icon(Icons.update),
+                                      icon: Icon(Icons.update, size: 20),
                                       onPressed: () {
-                                        if (listaMetricas.listaMetricas[index]
-                                                .realizado !=
+                                        if (listaMetricas
+                                                .listaMetricas[index].meta1 !=
                                             null) {
-                                          controladorRealizado[index].text =
-                                              listaMetricas.listaMetricas[index]
-                                                  .realizado
+                                          controladorRealizado1[index].text =
+                                              metricas[index]
+                                                  .realizado1
                                                   .toString();
                                         }
                                       }),
                                 ],
                               )),
-                              DataCell(
-                                CustomText(
-                                    text: listaMetricas
-                                        .listaMetricas[index].meta
-                                        .toString()),
-                              ),
-                              DataCell(CustomText(
-                                  text:
-                                      '${gerarProgresso(listaMetricas.listaMetricas[index].realizado!, listaMetricas.listaMetricas[index].meta!)} %')),
+                              //====================Q2========================
+                              DataCell(Row(
+                                children: [
+                                  Container(
+                                    width: 40,
+                                    child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      enabled: editavel,
+                                      controller: controladorRealizado2[index],
+
+                                      // onChanged: (text) {
+                                      //   meta = text;
+                                      // },
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.lock, size: 20),
+                                    onPressed: () {
+                                      idMetrica.text =
+                                          metricas[index].idMetrica.toString();
+                                      Get.find<ControllerProjetoRepository>()
+                                          .atualizarRealizado(
+                                              2,
+                                              idMetrica.text,
+                                              double.parse(
+                                                  controladorRealizado2[index]
+                                                      .text));
+                                      // (idMetrica.text,
+                                      //     double.parse(controladorMeta[index].text));
+                                      // editavel = false;
+                                    },
+                                  ),
+                                  IconButton(
+                                      icon: Icon(Icons.update, size: 20),
+                                      onPressed: () {
+                                        if (metricas[index].meta2 != null) {
+                                          controladorRealizado2[index].text =
+                                              metricas[index]
+                                                  .realizado2
+                                                  .toString();
+                                        }
+                                      }),
+                                ],
+                              )),
+                              //===========================Q3============================
+                              DataCell(Row(
+                                children: [
+                                  Container(
+                                    width: 40,
+                                    child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      enabled: editavel,
+                                      controller: controladorRealizado3[index],
+
+                                      // onChanged: (text) {
+                                      //   meta = text;
+                                      // },
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.lock, size: 20),
+                                    onPressed: () {
+                                      idMetrica.text =
+                                          metricas[index].idMetrica.toString();
+                                      Get.find<ControllerProjetoRepository>()
+                                          .atualizarRealizado(
+                                              3,
+                                              idMetrica.text,
+                                              double.parse(
+                                                  controladorRealizado3[index]
+                                                      .text));
+                                      // (idMetrica.text,
+                                      //     double.parse(controladorMeta[index].text));
+                                      // editavel = false;
+                                    },
+                                  ),
+                                  IconButton(
+                                      icon: Icon(Icons.update, size: 20),
+                                      onPressed: () {
+                                        if (metricas[index].meta3 != null) {
+                                          controladorRealizado3[index].text =
+                                              metricas[index]
+                                                  .realizado3
+                                                  .toString();
+                                        }
+                                      }),
+                                ],
+                              )),
+                              DataCell(Row(
+                                children: [
+                                  Container(
+                                    width: 40,
+                                    child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      enabled: editavel,
+                                      controller: controladorRealizado4[index],
+
+                                      // onChanged: (text) {
+                                      //   meta = text;
+                                      // },
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.lock, size: 20),
+                                    onPressed: () {
+                                      idMetrica.text =
+                                          metricas[index].idMetrica.toString();
+                                      Get.find<ControllerProjetoRepository>()
+                                          .atualizarRealizado(
+                                              4,
+                                              idMetrica.text,
+                                              double.parse(
+                                                  controladorRealizado4[index]
+                                                      .text));
+                                      // (idMetrica.text,
+                                      //     double.parse(controladorMeta[index].text));
+                                      // editavel = false;
+                                    },
+                                  ),
+                                  IconButton(
+                                      icon: Icon(Icons.update, size: 20),
+                                      onPressed: () {
+                                        if (metricas[index].meta4 != null) {
+                                          controladorRealizado4[index].text =
+                                              metricas[index]
+                                                  .realizado4
+                                                  .toString();
+                                        }
+                                      }),
+                                ],
+                              )),
+                              DataCell(SingleChildScrollView(
+                                  child: CustomText(
+                                      text:
+                                          'Quarter 1 : ${metricas[index].meta1.toString()}\nQuarter 2 : ${metricas[index].meta2.toString()}\nQuarter 3 : ${metricas[index].meta3.toString()}\nQuarter 4 : ${metricas[index].meta4.toString()}'))),
+                              DataCell(SingleChildScrollView(
+                                  child: CustomText(
+                                      text:
+                                          'Quarter 1 : ${listaMetricas.gerarProgresso(metricas[index].realizado1!, metricas[index].meta1!)} %\nQuarter 2 : ${listaMetricas.gerarProgresso(metricas[index].realizado2!, metricas[index].meta2!)} %\nQuarter 3 : ${listaMetricas.gerarProgresso(metricas[index].realizado3!, metricas[index].meta3!)} %\nQuarter 4 : ${listaMetricas.gerarProgresso(metricas[index].realizado4!, metricas[index].meta4!)} %'))),
                             ],
                           ),
                         ),
@@ -276,36 +423,12 @@ class _MetaClienteState extends State<MetaCliente> {
                   Navigator.of(context).pop();
                 },
                 child: CustomText(
-                  text: "Voltar para Projetos",
+                  text: "Voltar para Mandala",
                   color: PaletaCores.active.withOpacity(.7),
                   weight: FontWeight.bold,
                 ),
               )),
           SizedBox(width: 12),
-          // Container(
-          //     decoration: BoxDecoration(
-          //         border: Border.all(color: PaletaCores.active, width: .5),
-          //         color: PaletaCores.corLight,
-          //         borderRadius: BorderRadius.circular(20)),
-          //     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          //     child: ElevatedButton(
-          //       style: ElevatedButton.styleFrom(
-          //         primary: PaletaCores.corLight,
-          //         elevation: 0,
-          //         padding: EdgeInsets.symmetric(
-          //           horizontal: 12,
-          //           vertical: 6,
-          //         ),
-          //       ),
-          //       onPressed: () {
-
-          //       },
-          //       child: CustomText(
-          //         text: "Travar Metas",
-          //         color: PaletaCores.active.withOpacity(.7),
-          //         weight: FontWeight.bold,
-          //       ),
-          //     )),
         ],
       ),
     );

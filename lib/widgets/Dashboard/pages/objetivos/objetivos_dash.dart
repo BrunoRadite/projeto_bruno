@@ -16,7 +16,7 @@ class _ObjetivosTableState extends State<ObjetivosTable> {
   TextEditingController novoObj = TextEditingController();
   TextEditingController idObj = TextEditingController();
 
-  String idProjeto = "2qweqw23133";
+  //String idProjeto = "2qweqw23133";
 
   @override
   initState() {
@@ -25,8 +25,8 @@ class _ObjetivosTableState extends State<ObjetivosTable> {
 
   @override
   Widget build(BuildContext context) {
-
-    ControllerProjetoRepository listaObjetivosPrincipais = Get.find<ControllerProjetoRepository>();
+    ControllerProjetoRepository listaObjetivosPrincipais =
+        Get.find<ControllerProjetoRepository>();
 
     return Container(
       margin: EdgeInsets.only(bottom: 30),
@@ -89,7 +89,7 @@ class _ObjetivosTableState extends State<ObjetivosTable> {
             ),
           ),
           Obx(
-                () => DataTable2(
+            () => DataTable2(
               columnSpacing: 12,
               horizontalMargin: 12,
               minWidth: 600,
@@ -101,49 +101,49 @@ class _ObjetivosTableState extends State<ObjetivosTable> {
               ],
               rows: List<DataRow>.generate(
                 listaObjetivosPrincipais.listaObjectives.length,
-                    (index) => DataRow(
+                (index) => DataRow(
                   cells: [
                     DataCell(
-                      //CustomText(text: controller.listObjects[index]),
+                        //CustomText(text: controller.listObjects[index]),
                         Row(
-                          children: [
-                            Expanded(
-                              child: CustomText(
-                                  text: listaObjetivosPrincipais
-                                      .listaObjectives[index].nome),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: IconButton(
-                                  color: Colors.blueGrey,
-                                  splashRadius: 20,
-                                  icon: Icon(Icons.edit),
-                                  onPressed: () {
-                                    novoObj.text = listaObjetivosPrincipais
-                                        .listaObjectives[index].nome
-                                        .toString();
-                                    idObj.text = listaObjetivosPrincipais
-                                        .listaObjectives[index].idObjetivo
-                                        .toString();
-                                  }),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: IconButton(
-                                  color: Colors.red,
-                                  splashRadius: 20,
-                                  icon: Icon(Icons.delete),
-                                  onPressed: () {
-                                    idObj.text = listaObjetivosPrincipais
-                                        .listaObjectives[index].idObjetivo!;
+                      children: [
+                        Expanded(
+                          child: CustomText(
+                              text: listaObjetivosPrincipais
+                                  .listaObjectives[index].nome),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: IconButton(
+                              color: Colors.blueGrey,
+                              splashRadius: 20,
+                              icon: Icon(Icons.edit),
+                              onPressed: () {
+                                novoObj.text = listaObjetivosPrincipais
+                                    .listaObjectives[index].nome
+                                    .toString();
+                                idObj.text = listaObjetivosPrincipais
+                                    .listaObjectives[index].idObjetivo
+                                    .toString();
+                              }),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: IconButton(
+                              color: Colors.red,
+                              splashRadius: 20,
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                idObj.text = listaObjetivosPrincipais
+                                    .listaObjectives[index].idObjetivo!;
 
-                                    showDialog(
-                                        context: context,
-                                        builder: (ctx) => buildAlertDialog());
-                                  }),
-                            ),
-                          ],
-                        )),
+                                showDialog(
+                                    context: context,
+                                    builder: (ctx) => buildAlertDialog());
+                              }),
+                        ),
+                      ],
+                    )),
                   ],
                 ),
               ),
@@ -162,7 +162,7 @@ class _ObjetivosTableState extends State<ObjetivosTable> {
         TextButton(
             onPressed: () {
               Get.find<ControllerProjetoRepository>()
-                  .removeObjetivo(idProjeto, "${idObj.text}");
+                  .removeObjetivo("${idObj.text}");
 
               novoObj.text = '';
               Get.back();
@@ -196,19 +196,38 @@ class _ObjetivosTableState extends State<ObjetivosTable> {
           ),
         ),
         onPressed: () {
-          if (tipoOperacao == 1) {
-            Get.find<ControllerProjetoRepository>()
-                .addOneObjective(idProjeto, novoObjetivo.text);
-            novoObjetivo.text = '';
-          } else if (tipoOperacao == 2) {
-            Get.find<ControllerProjetoRepository>().sincronizaListaObjetivos();
-          } else if (tipoOperacao == 3) {
-            Get.find<ControllerProjetoRepository>()
-                .atualizaObjetivo(idProjeto, idObj.text, novoObj.text);
-            novoObjetivo.text = '';
-            idObj.text = '';
+          if (Get.find<ControllerProjetoRepository>().idProjeto.value != '') {
+            if (tipoOperacao == 1) {
+              if (novoObjetivo.text != '')
+                Get.find<ControllerProjetoRepository>()
+                    .addOneObjective(novoObjetivo.text);
+              novoObjetivo.text = '';
+            } else if (tipoOperacao == 2) {
+              var controller = Get.find<ControllerProjetoRepository>();
+              controller.atualizaTudo(controller.idProjeto.string);
+            } else if (tipoOperacao == 3) {
+              if (novoObjetivo.text != '')
+                Get.find<ControllerProjetoRepository>()
+                    .atualizaObjetivo(idObj.text, novoObjetivo.text);
+              novoObjetivo.text = '';
+              idObj.text = '';
+            } else {
+              debugPrint("Operação inválida em Objetivos");
+            }
           } else {
-            debugPrint("Operação inválida em Objetivos");
+            showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                        title: Text("Nenhum Projeto Selecionado"),
+                        content: Text(
+                            "Va no menu projetos, selecione um projeto e tente novamente"),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              child: Text("OK")),
+                        ]));
           }
         },
         child: CustomText(

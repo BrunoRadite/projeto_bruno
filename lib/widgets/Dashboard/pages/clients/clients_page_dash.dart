@@ -1,3 +1,7 @@
+import 'package:get/get.dart';
+
+import '/widgets/Dashboard/controller/controllers_dash.dart';
+
 import '/models/usuario.dart';
 import '/utils/paleta_cores.dart';
 import 'package:provider/provider.dart';
@@ -8,11 +12,17 @@ import '/widgets/Dashboard/app_bar/custom_text.dart';
 import '/widgets/Dashboard/pages/authentication/cadastro_cliente_gerenciador.dart';
 
 /// Example without datasource
-class ClientsTable extends StatelessWidget {
+class ClientsTable extends StatefulWidget {
   const ClientsTable();
 
   @override
+  _ClientsTableState createState() => _ClientsTableState();
+}
+
+class _ClientsTableState extends State<ClientsTable> {
+  @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ControllerProjetoRepository>();
     final usuarios = Provider.of<List<Usuario>?>(context);
     return Container(
       margin: EdgeInsets.only(bottom: 30),
@@ -69,9 +79,7 @@ class ClientsTable extends StatelessWidget {
               usuarios!.length,
               (index) => DataRow(
                 cells: [
-                  DataCell(
-                    CustomText(text: usuarios[index].nome),
-                  ),
+                  DataCell(CustomText(text: usuarios[index].nome)),
                   DataCell(
                     CustomText(text: usuarios[index].email),
                   ),
@@ -96,13 +104,26 @@ class ClientsTable extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           PopupMenuButton(
+                            onSelected: (value) {
+                              if (value == 1) {
+                                controller.mudarAtivo(usuarios[index].ativo,
+                                    usuarios[index].idUsuario);
+                              } else if (value == 2) {
+                                controller.mudarEdit(usuarios[index].editor,
+                                    usuarios[index].idUsuario);
+                              }
+                            },
                             itemBuilder: (BuildContext context) => [
                               PopupMenuItem(
-                                child: Text('Suspender'),
-                              ),
+                                  child: (usuarios[index].ativo)
+                                      ? Text('Suspender')
+                                      : Text('Reativar'),
+                                  value: 1),
                               PopupMenuItem(
-                                  child:
-                                      Text('Bloquear Para Edição')), //value: ),
+                                  child: (usuarios[index].editor)
+                                      ? Text('Bloquear Para Edição')
+                                      : Text('Desbloquiar Para Edição'),
+                                  value: 2),
                             ],
                           ),
                         ],

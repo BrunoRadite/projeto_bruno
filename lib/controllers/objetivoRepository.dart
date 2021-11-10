@@ -1,10 +1,8 @@
 import 'dart:collection';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '/database/db_firestore.dart';
 import '/models/objetivosPrincipaisModel.dart';
-
-//TODO: Implementar o AuthService conforme o vídeo
-//import '/Authenticacao/services/auth_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ObjetivosPrincipaisRepository extends GetxController {
@@ -14,16 +12,19 @@ class ObjetivosPrincipaisRepository extends GetxController {
       nome: 'OBTER A CERTIFICAÇÃO 56002  PARA O SINDICATO',
       progresso: 100,
       importancia: 25,
+      startAngle: 0,
+      sweepAngle: 360,
     ),
     ObjetivosPrincipais(
       idObjetivo: "3",
       nome: '9001  PARA O SINDICATO',
       progresso: 50,
       importancia: 25,
+      startAngle: 0,
+      sweepAngle: 360,
     ),
   ].obs;
   late FirebaseFirestore db;
-  //late AuthService auth; //TODO: Aqui tem que ser o AuthService que temos que ver como funciona.
 
   ObjetivosPrincipaisRepository() {
     _startRepository();
@@ -48,10 +49,13 @@ class ObjetivosPrincipaisRepository extends GetxController {
         'objetivosPrincipais').get();
     for (var doc in snapshot.docs) {
       ObjetivosPrincipais table = ObjetivosPrincipais(
-          idObjetivo: doc['idObjetivo'],
-          importancia: doc['importancia'],
-          nome: doc['nome'],
-          progresso: doc['progresso']);
+        idObjetivo: doc['idObjetivo'],
+        importancia: doc['importancia'],
+        nome: doc['nome'],
+        progresso: doc['progresso'],
+        startAngle: doc['startAngle'],
+        sweepAngle: doc['sweepAngle'],
+      );
       _lista.add(table);
     }
     //}
@@ -76,6 +80,8 @@ class ObjetivosPrincipaisRepository extends GetxController {
           'nome': objetivo.nome,
           'progresso': objetivo.progresso,
           'importancia': objetivo.importancia,
+          'startAngle': objetivo.startAngle,
+          'sweepAngle': objetivo.sweepAngle,
         });
       }
     });
@@ -88,10 +94,13 @@ class ObjetivosPrincipaisRepository extends GetxController {
         //.doc(objetivo.idObjetivo.toString());
         .doc();
     ObjetivosPrincipais objetivo = ObjetivosPrincipais(
-        idObjetivo: reference.id,
-        importancia: 25,
-        nome: nomeObjetivo,
-        progresso: 100);
+      idObjetivo: reference.id,
+      importancia: 25,
+      nome: nomeObjetivo,
+      progresso: 100,
+      startAngle: 0,
+      sweepAngle: 360,
+    );
 
     _lista.add(objetivo);
 
@@ -115,17 +124,17 @@ class ObjetivosPrincipaisRepository extends GetxController {
 
   removeObjetivo(String objetivo) async {
     await db
-    //.collection('objetivoUsuario/${auth.usuario!.uid}/objetivosPrincipais')
+        //.collection('objetivoUsuario/${auth.usuario!.uid}/objetivosPrincipais')
         .collection('objetivosPrincipais')
         .doc(objetivo)
         .delete();
     _lista.removeWhere((element) => element.idObjetivo == objetivo);
   }
 
-
   void atualizaObjetivo(
       String idObjetivo, String nomeObjetivoAtualizado) async {
-    int indice = _lista.indexWhere((element) => element.idObjetivo == idObjetivo);
+    int indice =
+        _lista.indexWhere((element) => element.idObjetivo == idObjetivo);
     print(indice);
     _lista[indice].nome = nomeObjetivoAtualizado;
 

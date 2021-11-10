@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '/controllers/dados_controller.dart';
+import 'package:get/get.dart';
+import '/utils/paleta_cores.dart';
+import '/widgets/Dashboard/controller/controllers_dash.dart';
 
 class ManipulaResponsaveis extends StatelessWidget {
   const ManipulaResponsaveis({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ObjectiveController>(
-        builder: (context, controller, widget) {
-      return Visibility(
-        visible: controller.visivel,
+    var mandalaController = Get.find<ControllerProjetoRepository>();
+    return Obx(
+      () => Visibility(
+        visible: mandalaController.visivel.value,
         child: Padding(
           padding: const EdgeInsets.only(top: 20.0),
           child: Container(
@@ -18,13 +19,15 @@ class ManipulaResponsaveis extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text("Responsáveis"),
+                Text("Responsáveis",
+                    style: TextStyle(color: PaletaCores.textColor)),
                 SizedBox(
                   width: 20,
                 ),
                 Container(
                     width: 250,
                     child: TextField(
+                      style: TextStyle(color: PaletaCores.textColor),
                       textAlign: TextAlign.justify,
                       textAlignVertical: TextAlignVertical.center,
                       decoration: InputDecoration(
@@ -33,16 +36,24 @@ class ManipulaResponsaveis extends StatelessWidget {
                             size: 20,
                           ),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                           )),
                       maxLength: 450,
                       keyboardType: TextInputType.text,
-                    ))
+                    )),
+                IconButton(
+                    splashRadius: 15,
+                    onPressed: mandalaController.adicionarResponsavel,
+                    icon: Icon(Icons.add, size: 20)),
+                IconButton(
+                    splashRadius: 15,
+                    onPressed: mandalaController.buscarResponsavel,
+                    icon: Icon(Icons.search, size: 20)),
               ],
             ),
           ),
         ),
-      );
-    });
+      ),
+    );
   }
 }

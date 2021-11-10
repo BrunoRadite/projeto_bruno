@@ -1,4 +1,7 @@
 import 'dart:typed_data';
+import 'package:get/get.dart';
+import '/services/auth_service.dart';
+
 import '/models/usuario.dart';
 import '/utils/paleta_cores.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +19,12 @@ class CadastroPage extends StatefulWidget {
 }
 
 class _CadastroPageState extends State<CadastroPage> {
+  AuthService controllerAuth = Get.find<AuthService>();
   String erroMsg = "";
   bool cadastrarUsuario = false;
   TextEditingController _controllerName = TextEditingController();
   TextEditingController _controllerEmail = TextEditingController();
-  TextEditingController _controllerPassword = TextEditingController();
+  //TextEditingController _controllerPassword = TextEditingController();
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -106,10 +110,57 @@ class _CadastroPageState extends State<CadastroPage> {
     }
   }
 
+  // void _validarCampos() async {
+  //   String nome = _controllerName.text;
+  //   String email = _controllerEmail.text;
+  //   String senha = _controllerPassword.text;
+
+  //   if (email.isNotEmpty && email.contains("@")) {
+  //     if (senha.isNotEmpty && senha.length > 6) {
+  //       if (cadastrarUsuario) {
+  //         //cadastrar
+  //         if (_arquivoImagemSelecionado != null) {
+  //           if (nome.isNotEmpty && nome.length > 6) {
+  //             await _auth
+  //                 .createUserWithEmailAndPassword(
+  //               email: email,
+  //               password: senha,
+  //             )
+  //                 .then((userCredencial) {
+  //               String? idUsuario = userCredencial.user?.uid;
+  //               print("Usuário cadastrado: $idUsuario");
+
+  //               _auth.currentUser?.sendEmailVerification().then(
+  //                   (value) => print("enviei um email de verificação ..."));
+
+  //               //Upload da imagem
+  //               if (idUsuario != null) {
+  //                 Usuario usuario = Usuario(idUsuario, nome, email,
+  //                     tipoUsuario: "cliente", ativo: true);
+  //                 _uploadImagem(usuario);
+  //               }
+  //             });
+  //           } else {
+  //             print("Nome inválido digite 6 ou mais caracteres!");
+  //           }
+  //         } else {
+  //           print("Selecione uma imagem !");
+  //         }
+  //       } else {
+  //         print(
+  //             "Aconteceu algo de errado no cadastro do cliente gerenciador !");
+  //       }
+  //     } else {
+  //       print("Senha inválida !");
+  //     }
+  //   } else {
+  //     print("Preencha os campos de email e senha !");
+  //   }
+  // }
   void _validarCampos() async {
     String nome = _controllerName.text;
     String email = _controllerEmail.text;
-    String senha = _controllerPassword.text;
+    String senha = _controllerEmail.text;
 
     if (email.isNotEmpty && email.contains("@")) {
       if (senha.isNotEmpty && senha.length > 6) {
@@ -117,25 +168,10 @@ class _CadastroPageState extends State<CadastroPage> {
           //cadastrar
           if (_arquivoImagemSelecionado != null) {
             if (nome.isNotEmpty && nome.length > 6) {
-              await _auth
-                  .createUserWithEmailAndPassword(
-                email: email,
-                password: senha,
-              )
-                  .then((userCredencial) {
-                String? idUsuario = userCredencial.user?.uid;
-                print("Usuário cadastrado: $idUsuario");
-
-                _auth.currentUser?.sendEmailVerification().then(
-                    (value) => print("enviei um email de verificação ..."));
-
-                //Upload da imagem
-                if (idUsuario != null) {
-                  Usuario usuario = Usuario(idUsuario, nome, email,
-                      tipoUsuario: "cliente", ativo: true);
-                  _uploadImagem(usuario);
-                }
-              });
+              controllerAuth.registrarUsuarioEmailSenha(nome, email, email,
+                  tipoUsuario: 'gerenciador',
+                  gestor: '',
+                  arquivoImagemSelecionado: _arquivoImagemSelecionado);
             } else {
               print("Nome inválido digite 6 ou mais caracteres!");
             }
@@ -143,8 +179,19 @@ class _CadastroPageState extends State<CadastroPage> {
             print("Selecione uma imagem !");
           }
         } else {
-          print(
-              "Aconteceu algo de errado no cadastro do cliente gerenciador !");
+          //logar usuário
+          if (_arquivoImagemSelecionado != null) {
+            if (nome.isNotEmpty && nome.length > 6) {
+              controllerAuth.registrarUsuarioEmailSenha(nome, email, email,
+                  tipoUsuario: 'admin',
+                  arquivoImagemSelecionado: _arquivoImagemSelecionado,
+                  gestor: '');
+            } else {
+              print("Nome inválido digite 6 ou mais caracteres!");
+            }
+          } else {
+            print("Selecione uma imagem !");
+          }
         }
       } else {
         print("Senha inválida !");
@@ -245,16 +292,16 @@ class _CadastroPageState extends State<CadastroPage> {
                                       labelText: "Email",
                                       suffixIcon: Icon(Icons.mail_outline)),
                                 ),
-                                TextField(
-                                  obscureText: true,
-                                  keyboardType: TextInputType.name,
-                                  controller: _controllerPassword,
-                                  decoration: InputDecoration(
-                                    //hintText: "Senha",
-                                    labelText: "Senha",
-                                    suffixIcon: Icon(Icons.lock_outline),
-                                  ),
-                                ),
+                                // TextField(
+                                //   obscureText: true,
+                                //   keyboardType: TextInputType.name,
+                                //   controller: _controllerPassword,
+                                //   decoration: InputDecoration(
+                                //     //hintText: "Senha",
+                                //     labelText: "Senha",
+                                //     suffixIcon: Icon(Icons.lock_outline),
+                                //   ),
+                                // ),
                                 SizedBox(height: 20),
                                 Container(
                                   width: double.infinity,

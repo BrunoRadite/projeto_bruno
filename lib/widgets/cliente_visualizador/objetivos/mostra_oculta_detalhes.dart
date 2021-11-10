@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '/controllers/dados_controller.dart';
+import 'package:get/get.dart';
+import '/utils/paleta_cores.dart';
+import '/widgets/Dashboard/controller/controllers_dash.dart';
 
 class TelaDetalhes extends StatelessWidget {
   const TelaDetalhes({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ObjectiveController>(
-        builder: (context, controller, widget) {
-      return Visibility(
-        visible: true,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20.0),
-          child: Container(
-            child: GestureDetector(
-              onTap: () => controller.changeVisibilidade(),
+    var mandalaController = Get.find<ControllerProjetoRepository>();
+    return Visibility(
+      visible: true,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 20.0),
+        child: Container(
+          child: Obx(
+            () => GestureDetector(
+              onTap: () => mandalaController.changeVisibilidade(),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text("${controller.detalhes}"),
+                  Text("${mandalaController.detalhes}",
+                      style: TextStyle(color: PaletaCores.textColor)),
                   SizedBox(width: 10),
-                  Icon(controller.iconDetalhes)
+                  Icon(mandalaController.iconDetalhes.value)
                 ],
               ),
             ),
           ),
         ),
-      );
-    });
+      ),
+    );
   }
 }

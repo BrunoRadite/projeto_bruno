@@ -10,7 +10,7 @@ class OverViewCardsSmallScreenDash extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final usuarios = Provider.of<List<Usuario>?>(context);
-    final projetos = Provider.of<List<ObjetivoModel>?>(context);
+
     double _width = MediaQuery.of(context).size.width;
     return (usuarios != null)
         ? Container(
@@ -28,7 +28,7 @@ class OverViewCardsSmallScreenDash extends StatelessWidget {
                 ),
                 InfoCardSmallDash(
                   title: 'Modelos Criados',
-                  value: '${projetos!.length}',
+                  value: '19',
                   onTap: () {},
                   isActive: true,
                 ),

@@ -1,14 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '/screens/projeto_pagina_principal.dart';
-import '/widgets/Dashboard/app_bar/appBar_dash.dart';
-import '/widgets/Dashboard/menu_dash/side_menu_dash.dart';
+import '/widgets/Dashboard/controller/controllers_dash.dart';
+
 import '/screens/home_web.dart';
 import '/utils/paleta_cores.dart';
+import 'package:flutter/material.dart';
+import '/screens/projeto_pagina_principal.dart';
 import '/widgets/Dashboard/app_bar/custom_text.dart';
 
 class DashVisual extends StatefulWidget {
-  const DashVisual({Key? key}) : super(key: key);
+  final String? tipo;
+  const DashVisual({Key? key, this.tipo}) : super(key: key);
 
   @override
   _DashVisualState createState() => _DashVisualState();
@@ -17,12 +18,13 @@ class DashVisual extends StatefulWidget {
 class _DashVisualState extends State<DashVisual> {
   @override
   Widget build(BuildContext context) {
+    final controllerProjetos = Get.find<ControllerProjetoRepository>();
     //TODO: verificar o provider.of por get find
 
-    //Get.find();
+    //Get.find<Qual repository>();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dashboard Visual"),
+        title: Text("Dashboard Virtual"),
       ),
       body: GridView.count(
         primary: false,
@@ -363,87 +365,39 @@ class _DashVisualState extends State<DashVisual> {
       floatingActionButton: Row(
         children: [
           SizedBox(
-            width: 25,
-          ),
-          Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: PaletaCores.active, width: .5),
-                color: PaletaCores.corLight,
-                borderRadius: BorderRadius.circular(20)),
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: PaletaCores.corLight,
-                elevation: 0,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-              ),
-              onPressed: () {
-                //Get.to(HomeWeb());
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => HomeWeb()));
-              },
-              child: CustomText(
-                text: "Listar Projetos",
-                color: PaletaCores.active.withOpacity(.7),
-                weight: FontWeight.bold,
-              ),
-            ),
-          ),
-          SizedBox(
             width: 12,
           ),
+          SizedBox(width: 12),
           Container(
             decoration: BoxDecoration(
                 border: Border.all(color: PaletaCores.active, width: .5),
                 color: PaletaCores.corLight,
                 borderRadius: BorderRadius.circular(20)),
             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: PaletaCores.corLight,
-                elevation: 0,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
+            child: Obx(
+              () => Visibility(
+                visible: controllerProjetos.ocultaCriarProjeto(widget.tipo!),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: PaletaCores.corLight,
+                    elevation: 0,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                  ),
+                  onPressed: () {
+                    controllerProjetos.addOneProject("Projeto Padrão");
+                  },
+                  child: CustomText(
+                    text: "Criar Novo Projeto",
+                    color: PaletaCores.active.withOpacity(.7),
+                    weight: FontWeight.bold,
+                  ),
                 ),
               ),
-              onPressed: () {},
-              child: CustomText(
-                text: "Dashboard Vizual",
-                color: PaletaCores.active.withOpacity(.7),
-                weight: FontWeight.bold,
-              ),
             ),
-          ),
-          SizedBox(
-            width: 12,
-          ),
-          Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: PaletaCores.active, width: .5),
-                color: PaletaCores.corLight,
-                borderRadius: BorderRadius.circular(20)),
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: PaletaCores.corLight,
-                elevation: 0,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-              ),
-              onPressed: () {},
-              child: CustomText(
-                text: "Criar Novo Projeto",
-                color: PaletaCores.active.withOpacity(.7),
-                weight: FontWeight.bold,
-              ),
-            ),
-          ),
+          )
         ],
       ),
     );

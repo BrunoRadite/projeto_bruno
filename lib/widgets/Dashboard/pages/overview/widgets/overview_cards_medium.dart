@@ -10,7 +10,7 @@ class OverViewCardsMediumScreenSizeDash extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final usuarios = Provider.of<List<Usuario>?>(context);
-    final projetos = Provider.of<List<ObjetivoModel>?>(context);
+
     double _width = MediaQuery.of(context).size.width;
     return (usuarios != null)
         ? Column(
@@ -27,7 +27,7 @@ class OverViewCardsMediumScreenSizeDash extends StatelessWidget {
                   SizedBox(width: _width / 64),
                   InfoCardDash(
                     title: 'Modelos Criados',
-                    value: '${projetos!.length}',
+                    value: '19',
                     onTap: () {},
                     topColor: Colors.lightGreen,
                   ),

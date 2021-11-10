@@ -30,8 +30,7 @@ class InfoCardSmallDash extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                  color:
-                      isActive! ? PaletaCores.active : PaletaCores.corLightGrey,
+                  color: isActive! ? PaletaCores.corLight : PaletaCores.active,
                   width: .5)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -40,15 +39,12 @@ class InfoCardSmallDash extends StatelessWidget {
                   text: title,
                   size: 24,
                   weight: FontWeight.w300,
-                  color: isActive!
-                      ? PaletaCores.active
-                      : PaletaCores.corLightGrey),
+                  color: isActive! ? PaletaCores.corLight : PaletaCores.active),
               CustomText(
                 text: value,
                 size: 24,
                 weight: FontWeight.bold,
-                color:
-                    isActive! ? PaletaCores.active : PaletaCores.corLightGrey,
+                color: isActive! ? PaletaCores.corLight : PaletaCores.active,
               ),
             ],
           ),
