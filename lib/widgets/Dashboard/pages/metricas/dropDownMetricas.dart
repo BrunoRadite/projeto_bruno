@@ -47,10 +47,6 @@ class _DropDownMetricaState extends State<DropDownMetrica> {
                   },
                   value: _resultadoSelecionado,
                 ),
-                Text(
-                  "O resultado selecionado foi \n${_resultadoSelecionado!.nomeResultado} - id [${_resultadoSelecionado!.idResultado}]",
-                  style: TextStyle(fontSize: 20.0),
-                ),
               ],
             ),
           )

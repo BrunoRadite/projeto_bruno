@@ -106,9 +106,11 @@ class _ResultadosTableState extends State<ResultadosTable> {
                       Row(
                         children: [
                           Expanded(
-                            child: CustomText(
-                                text: controllerProjeto
-                                    .listaResultados[index].nomeResultado),
+                            child: SingleChildScrollView(
+                              child: CustomText(
+                                  text: controllerProjeto
+                                      .listaResultados[index].nomeResultado),
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(right: 8.0),

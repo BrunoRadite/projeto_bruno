@@ -93,23 +93,23 @@ class _MetaState extends State<Meta> {
                       size: ColumnSize.M,
                     ),
                     DataColumn2(
-                      label: Text('Realizados(q1,q2,q3,q4)'),
+                      label: Text('Realizados(Q1, Q2, Q3, Q4)'),
                       size: ColumnSize.M,
                     ),
                     DataColumn2(
-                      label: Text('Meta(q1)'),
+                      label: Text('Meta(Q1)'),
                       size: ColumnSize.M,
                     ),
                     DataColumn2(
-                      label: Text('Meta(q2)'),
+                      label: Text('Meta(Q2)'),
                       size: ColumnSize.M,
                     ),
                     DataColumn2(
-                      label: Text('Meta(q3)'),
+                      label: Text('Meta(Q3)'),
                       size: ColumnSize.M,
                     ),
                     DataColumn2(
-                      label: Text('Meta(q4)'),
+                      label: Text('Meta(Q4)'),
                       size: ColumnSize.M,
                     ),
                     DataColumn2(

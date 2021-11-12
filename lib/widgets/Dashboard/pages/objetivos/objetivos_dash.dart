@@ -108,9 +108,11 @@ class _ObjetivosTableState extends State<ObjetivosTable> {
                         Row(
                       children: [
                         Expanded(
-                          child: CustomText(
-                              text: listaObjetivosPrincipais
-                                  .listaObjectives[index].nome),
+                          child: SingleChildScrollView(
+                            child: CustomText(
+                                text: listaObjetivosPrincipais
+                                    .listaObjectives[index].nome),
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right: 8.0),

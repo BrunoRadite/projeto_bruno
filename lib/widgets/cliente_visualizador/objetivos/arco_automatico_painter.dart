@@ -53,8 +53,8 @@ class ArcoAutomatico extends CustomPainter {
 
     //Não tem objetivo ainda cadastrado
     if (numeroDeObjetivos == 0) {
-      oval =
-          Rect.fromCenter(center: c, width: (radius / 1), height: (radius / 1));
+      oval = Rect.fromCenter(
+          center: c, width: (radius / 0.9), height: (radius / 0.9));
 
       Path p = Path();
       p.moveTo(width, height);
@@ -80,7 +80,7 @@ class ArcoAutomatico extends CustomPainter {
       canvas.drawArc(oval, anguloInicio, anguloFinal, true, paint,
           onTapDown: (evento) {
         mandalaController.ultimoNivelClicado.value = 1;
-        mandalaController.indice.value = -1;
+        mandalaController.indiceObjective.value = -1;
         mandalaController.indiceResult.value = -1;
       });
       //canvas.drawCircle(c, radius, paintC);
@@ -104,7 +104,7 @@ class ArcoAutomatico extends CustomPainter {
         p.lineTo(width, height);
         p.close();
 
-        Paint paint = Paint()..color = Colors.blueGrey;
+        Paint paint = Paint()..color = Colors.white;
 
         //Configurações do nível Objetivo (círculo com a lista de objetivos)
         print("\nTenho $numeroDeObjetivos de objetivos para desenhar");
@@ -153,7 +153,7 @@ class ArcoAutomatico extends CustomPainter {
             mandalaController.data.value =
                 mandalaController.listaObjectives[o].dataVencimento!;
             mandalaController.listaObjectives[o].dataVencimento!;
-            mandalaController.indice.value = o;
+            mandalaController.indiceObjective.value = o;
 
             print(
                 "xx pedaço clicado - ${mandalaController.ultimoObjetivoClicado.value}");
@@ -298,7 +298,7 @@ class ArcoAutomatico extends CustomPainter {
                 mandalaController.listaObjectives[o].progresso!.toDouble();
             mandalaController.data.value =
                 mandalaController.listaObjectives[o].dataVencimento!;
-            mandalaController.indice.value = o;
+            mandalaController.indiceObjective.value = o;
 
             print(
                 "xx pedaço clicado - ${mandalaController.ultimoObjetivoClicado.value}");
@@ -329,16 +329,46 @@ class ArcoAutomatico extends CustomPainter {
     }
   }
 
-  void drawObject(TouchyCanvas canvas, Size size) {
+  void drawObject(TouchyCanvas canvas, Canvas cv, Size size) {
     double width = size.width / 2;
     double height = size.height / 2;
     final c = Offset(width, height);
     final radius = size.width * 0.8;
 
-    final linePaint = Paint() //Cor da linha
-      ..color = Colors.white
-      ..strokeWidth = 4.0
+    final linePaint = Paint()
+      ..color = Colors.black87
+      ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
+
+    final styleText2 = TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.bold,
+      fontSize: 25.0,
+    );
+
+    final styleTextObjectiveWithoutResult = TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.normal,
+      fontSize: 40.0,
+    );
+
+    final styleTextObjectiveWithResult = TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.normal,
+      fontSize: 45.0,
+    );
+
+    final styleTextResult = TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.normal,
+      fontSize: 30.0,
+    );
+
+    final styleText3 = TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.normal,
+      fontSize: 50.0,
+    );
 
     var mandalaController = Get.find<ControllerProjetoRepository>();
     int numeroDeObjetivos = mandalaController.listaObjectives.length;
@@ -369,21 +399,29 @@ class ArcoAutomatico extends CustomPainter {
       p.close();
 
       Paint paint = Paint()
-        ..color = Colors.blueGrey
+        ..color = Colors.white
+        //..color = Colors.blueGrey
         ..style = PaintingStyle.fill;
 
       Paint paintC = Paint()
         ..color = Colors.black
         ..strokeWidth = 4.0
         ..style = PaintingStyle.stroke;
+      final styleText = TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+        fontSize: 40.0,
+      );
+
+      canvas.drawShadow(p, Colors.black87, 10, true);
 
       canvas.drawPath(p, paint, onTapDown: (evento) {
-        mandalaController.ultimoNivelClicado.value = 1;
-        mandalaController.indice.value = -1;
+        mandalaController.indiceObjective.value = -1;
         mandalaController.indiceResult.value = -1;
       });
 
-      canvas.drawShadow(p, Colors.white, 5, true);
+      drawTextCentered(
+          cv, c, mandalaController.nome.string, styleText3, radius * 0.5, 1);
       // canvas.drawArc(oval, anguloInicio, anguloFinal, true, paint,
       //     onTapDown: (evento) {
       //   mandalaController.indice.value = -1;
@@ -411,7 +449,7 @@ class ArcoAutomatico extends CustomPainter {
         p.lineTo(width, height);
         p.close();
 
-        Paint paint = Paint()..color = Colors.blueGrey;
+        Paint paint = Paint()..color = Colors.white;
 
         rectObjetivos = Rect.fromCenter(
             center: c, width: (radius / 1), height: (radius / 1));
@@ -452,11 +490,20 @@ class ArcoAutomatico extends CustomPainter {
             mandalaController.data.value =
                 mandalaController.listaObjectives[o].dataVencimento!;
             mandalaController.listaObjectives[o].dataVencimento!;
-            mandalaController.indice.value = o;
+            mandalaController.indiceObjective.value = o;
             print(
                 "xx pedaço clicado - ${mandalaController.ultimoObjetivoClicado.value}");
             print("xx Ultimo nivel clicado - 2");
           });
+          drawLabels(
+              cv,
+              c,
+              radius,
+              degToRad(listaObjetivos[o].startAngle),
+              degToRad(listaObjetivos[o].sweepAngle),
+              listaObjetivos[o].nome!,
+              styleTextObjectiveWithoutResult,
+              2);
         }
 
         listaLines.forEach((element) {
@@ -467,6 +514,9 @@ class ArcoAutomatico extends CustomPainter {
         canvas.drawPath(p, paint, onTapDown: (evento) {
           mandalaController.ultimoNivelClicado.value = 1;
         });
+        canvas.drawShadow(p, Colors.white10, 5, true);
+        drawTextCentered(
+            cv, c, mandalaController.nome.string, styleText2, radius * 0.5, 1);
       } else if (numeroDeResultados > 0) {
         anguloInicio = degToRad(0);
         anguloFinal = degToRad(360);
@@ -480,7 +530,7 @@ class ArcoAutomatico extends CustomPainter {
         p.lineTo(width, height);
         p.close();
 
-        Paint paint = Paint()..color = Colors.blueGrey;
+        Paint paint = Paint()..color = Colors.white;
 
         rectObjetivos = Rect.fromCenter(
             center: c, width: (radius / 1.25), height: (radius / 1.25));
@@ -568,7 +618,26 @@ class ArcoAutomatico extends CustomPainter {
                 "xx pedaço clicado - ${mandalaController.ultimoResultadoClicado}");
             print("xx Ultimo nivel clicado - 3");
           }, paintStyleForTouch: PaintingStyle.stroke);
+
+          double? fontS = listaResultados.length < 8 ? 30 : 30;
+          final styleTextResult = TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.normal,
+            fontSize: fontS,
+          );
+
+          drawLabels(
+              cv,
+              c,
+              radius,
+              degToRad(listaResultados[r].startAngle),
+              degToRad(listaResultados[r].sweepAngle),
+              listaResultados[r].nomeResultado!,
+              styleTextResult,
+              3,
+              nivel: 3);
         }
+
         listaLinesResults.forEach((element) {
           canvas.drawLine(c, element, linePaint);
         });
@@ -598,12 +667,25 @@ class ArcoAutomatico extends CustomPainter {
                         mandalaController.listaObjectives[o].idObjetivo!));
             mandalaController.data.value =
                 mandalaController.listaObjectives[o].dataVencimento!;
-            mandalaController.indice.value = o;
+            mandalaController.indiceObjective.value = o;
             print(
                 "xx pedaço clicado - ${mandalaController.ultimoObjetivoClicado.value}");
             print("xx Ultimo nivel clicado - 2");
           });
+          drawLabels(
+              cv,
+              c,
+              radius,
+              degToRad(listaObjetivos[o].startAngle),
+              degToRad(listaObjetivos[o].sweepAngle),
+              listaObjetivos[o].nome!,
+              styleTextObjectiveWithResult,
+              3,
+              nivel: 2);
         }
+
+        canvas.drawArc(
+            rectObjetivos, degToRad(0), degToRad(360), true, linePaint);
 
         listaLines.forEach((element) {
           canvas.drawLine(c, element, linePaint);
@@ -618,6 +700,9 @@ class ArcoAutomatico extends CustomPainter {
         }, onPanDown: (tapdetail) {
           print("orange circle swiped");
         });
+        canvas.drawShadow(p, Colors.white24, 10, true);
+        drawTextCentered(
+            cv, c, mandalaController.nome.string, styleText2, radius * 0.5, 1);
       }
     } else {
       // Nenhum objetivo ou nulo
@@ -628,11 +713,121 @@ class ArcoAutomatico extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var myCanvas = TouchyCanvas(context, canvas);
-    drawObject(myCanvas, size);
+
+    drawObject(myCanvas, canvas, size);
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return oldDelegate != this;
+  }
+
+  TextPainter measureText(String text, TextStyle style, double maxWidth,
+      TextAlign align, int quantNivel) {
+    if (quantNivel == 1) {
+      final textSpan = TextSpan(text: text, style: style);
+      final tp = TextPainter(
+          textScaleFactor: 0.85,
+          maxLines: 4,
+          text: textSpan,
+          textAlign: align,
+          textDirection: TextDirection.ltr);
+      tp.layout(minWidth: 0, maxWidth: maxWidth);
+      return tp;
+    } else if (quantNivel == 2) {
+      final textSpan = TextSpan(text: text, style: style);
+      final tp = TextPainter(
+          textScaleFactor: 0.55,
+          maxLines: 4,
+          text: textSpan,
+          textAlign: align,
+          textDirection: TextDirection.ltr);
+      tp.layout(minWidth: 0, maxWidth: maxWidth);
+      return tp;
+    } else if (quantNivel == 3) {
+      final textSpan = TextSpan(text: text, style: style);
+      final tp = TextPainter(
+          textScaleFactor: 0.35,
+          maxLines: 4,
+          text: textSpan,
+          textAlign: align,
+          textDirection: TextDirection.ltr);
+      tp.layout(minWidth: 0, maxWidth: maxWidth);
+      return tp;
+    } else {
+      final textSpan = TextSpan(text: text, style: style);
+      final tp = TextPainter(
+          textScaleFactor: 0.1,
+          maxLines: 4,
+          text: textSpan,
+          textAlign: align,
+          textDirection: TextDirection.ltr);
+      tp.layout(minWidth: 0, maxWidth: maxWidth);
+      return tp;
+    }
+  }
+
+  void drawLabels(Canvas canvas, Offset c, double radius, startAngle,
+      sweepAngle, String text, TextStyle styleText2, int quantNivel,
+      {int nivel = 0}) {
+    if (quantNivel == 1) {
+      final r = radius * 0.35;
+      final dx = r * cos(startAngle + sweepAngle / 2.0);
+      final dy = r * sin(startAngle + sweepAngle / 2.0);
+      final position = c + Offset(dx, dy);
+      drawTextCentered(canvas, position, text, styleText2, 160.0, quantNivel);
+    } else if (quantNivel == 2) {
+      final r = radius * 0.38;
+      final dx = r * cos(startAngle + sweepAngle / 2.0);
+      final dy = r * sin(startAngle + sweepAngle / 2.0);
+      final position = c + Offset(dx, dy);
+      drawTextCentered(canvas, position, text, styleText2, 160.0, quantNivel);
+    } else if (quantNivel == 3) {
+      if (nivel == 2) {
+        final r = radius * 0.30;
+        final dx = r * cos(startAngle + sweepAngle / 2.0);
+        final dy = r * sin(startAngle + sweepAngle / 2.0);
+        final position = c + Offset(dx, dy);
+        drawTextCentered(canvas, position, text, styleText2, 120.0, quantNivel);
+      }
+      if (nivel == 3) {
+        final r = radius * 0.46;
+        final dx = r * cos(startAngle + sweepAngle / 2.0);
+        final dy = r * sin(startAngle + sweepAngle / 2.0);
+        final position = c + Offset(dx, dy);
+        drawTextCentered(canvas, position, text, styleText2, 80.0, quantNivel);
+      }
+    }
+  }
+
+  Size drawTextCentered(Canvas canvas, Offset position, String text,
+      TextStyle style, double maxWidth, int quantNivel) {
+    final tp = measureText(text, style, maxWidth, TextAlign.center, quantNivel);
+    final pos = position + Offset(-tp.width / 2.0, -tp.height / 2.0);
+    tp.paint(canvas, pos);
+    return tp.size;
+  }
+
+  TextPainter measureText2(Canvas canvas, String text, TextStyle style) {
+    final textSpan = TextSpan(text: text, style: style);
+    final textPainter =
+        TextPainter(text: textSpan, textDirection: TextDirection.ltr);
+    textPainter.layout(minWidth: 0, maxWidth: double.maxFinite);
+    return textPainter;
+  }
+
+  void drawTextArc(Canvas canvas, Offset arcCenter, double radius, double a,
+      String text, style) {
+    final pos = Offset(0, radius);
+    text.split('').forEach((c) {
+      final tp = measureText2(canvas, c, style);
+      final w = tp.width + 1.0;
+      final double alpha = asin(w / (2 * radius));
+      //canvas.save();
+      canvas.translate(arcCenter.dx, arcCenter.dy);
+      a += alpha;
+      tp.paint(canvas, pos + Offset(-w / 2.0, 0.0));
+      canvas.restore();
+    });
   }
 }

@@ -21,7 +21,8 @@ class DropObjetivoEResultado extends GetxController {
     this.result.value = s;
     debugPrint("Valor que saiu result: ${this.result.value} - $result");
     refresh();
-    debugPrint("Valor que saiu depois do refresh: ${this.result.value} - $result");
+    debugPrint(
+        "Valor que saiu depois do refresh: ${this.result.value} - $result");
   }
 }
 
@@ -66,10 +67,6 @@ class _DropDownObjetivoState extends State<DropDownObjetivo> {
                     });
                   },
                   value: _objetivoSelecionado,
-                ),
-                Text(
-                  "O objetivo selecionado foi \n${_objetivoSelecionado!.nome} - id [${_objetivoSelecionado!.idObjetivo}]",
-                  style: TextStyle(fontSize: 20.0),
                 ),
               ],
             ),

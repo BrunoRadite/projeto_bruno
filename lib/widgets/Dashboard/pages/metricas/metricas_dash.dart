@@ -127,10 +127,11 @@ class _MetricasTableState extends State<MetricasTable> {
                       Row(
                         children: [
                           Expanded(
+                              child: SingleChildScrollView(
                             child: CustomText(
                                 text: controllerProjetoRepository
                                     .listaMetricas[index].nomeMetrica),
-                          ),
+                          )),
                           Padding(
                             padding: const EdgeInsets.only(right: 8.0),
                             child: IconButton(
@@ -221,8 +222,11 @@ class _MetricasTableState extends State<MetricasTable> {
           if (controlador.idProjeto.value != '') {
             if (operacao == 1) {
               if (newMetrica.text != '')
-                controlador.addOneMetric(newMetrica.text,
-                    idResultado: resultadoPai);
+                (unidade.text == '')
+                    ? controlador.addOneMetric(newMetrica.text,
+                        idResultado: resultadoPai)
+                    : controlador.addOneMetric(newMetrica.text,
+                        idResultado: resultadoPai, unidade: unidade.text);
               newMetrica.text = "";
             } else if (operacao == 2) {
               controlador.atualizaTudo(controlador.idProjeto.string);

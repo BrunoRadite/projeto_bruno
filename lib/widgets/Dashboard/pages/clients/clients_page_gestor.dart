@@ -26,6 +26,15 @@ class _ClientsTableGestorState extends State<ClientsTableGestor> {
   Widget build(BuildContext context) {
     final controller = Get.find<ControllerProjetoRepository>();
     final usuarios = Provider.of<List<Usuario>?>(context);
+
+    // List<Usuario> usuariosDoGestor = <Usuario>[];
+
+    // var users =
+    //     usuarios!.where((element) => element.gestor == auth.usuario!.uid);
+
+    // for (var user in users) {
+    //   usuariosDoGestor.add(user);
+    // }
     return Container(
       margin: EdgeInsets.only(bottom: 30),
       decoration: BoxDecoration(
@@ -79,11 +88,16 @@ class _ClientsTableGestorState extends State<ClientsTableGestor> {
             ],
             rows: List<DataRow>.generate(
               usuarios!.length,
+              //usuariosDoGestor.length,
               (index) => DataRow(
                 cells: [
-                  DataCell(CustomText(text: usuarios[index].nome)),
+                  DataCell(CustomText(
+                      text: usuarios[index]
+                          .nome)), //usuariosDoGestor[index].nome)),
                   DataCell(
-                    CustomText(text: usuarios[index].email),
+                    CustomText(
+                        text: usuarios[index]
+                            .email), //usuariosDoGestor[index].email),
                   ),
                   DataCell(
                     Container(
@@ -95,7 +109,8 @@ class _ClientsTableGestorState extends State<ClientsTableGestor> {
                         padding:
                             EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         child: CustomText(
-                          text: usuarios[index].tipoUsuario,
+                          text: usuarios[index]
+                              .tipoUsuario, //usuariosDoGestor[index].tipoUsuario,
                           color: PaletaCores.active.withOpacity(.7),
                           weight: FontWeight.bold,
                         )),
@@ -108,21 +123,29 @@ class _ClientsTableGestorState extends State<ClientsTableGestor> {
                           PopupMenuButton(
                             onSelected: (value) {
                               if (value == 1) {
-                                controller.mudarAtivo(usuarios[index].ativo,
-                                    usuarios[index].idUsuario);
+                                controller.mudarAtivo(
+                                    usuarios[index]
+                                        .ativo, //usuariosDoGestor[index].ativo,
+                                    usuarios[index]
+                                        .idUsuario); //usuariosDoGestor[index].idUsuario);
                               } else if (value == 2) {
-                                controller.mudarEdit(usuarios[index].editor,
-                                    usuarios[index].idUsuario);
+                                controller.mudarEdit(
+                                    usuarios[index]
+                                        .editor, //usuariosDoGestor[index].editor,
+                                    usuarios[index]
+                                        .idUsuario); //usuariosDoGestor[index].idUsuario);
                               }
                             },
                             itemBuilder: (BuildContext context) => [
                               PopupMenuItem(
-                                  child: (usuarios[index].ativo)
+                                  child: (usuarios[index]
+                                          .ativo) //(usuariosDoGestor[index].ativo)
                                       ? Text('Suspender')
                                       : Text('Reativar'),
                                   value: 1),
                               PopupMenuItem(
-                                  child: (usuarios[index].editor)
+                                  child: (usuarios[index]
+                                          .editor) //(usuariosDoGestor[index].editor)
                                       ? Text('Bloquear Para Edição')
                                       : Text('Desbloquiar Para Edição'),
                                   value: 2),

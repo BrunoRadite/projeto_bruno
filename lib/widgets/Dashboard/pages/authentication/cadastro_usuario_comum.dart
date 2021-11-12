@@ -37,33 +37,33 @@ class _CadastroPageeUsuarioState extends State<CadastroPageUsuario> {
     //FirebaseFirestore firestore = FF
   }
 
-  void _verificarUsuarioLogado() async {
-    User? usuarioLogado = await _auth.currentUser;
-    if (usuarioLogado != null) {
-      verificaTipoUsuario(usuarioLogado);
-      //Navigator.pushReplacementNamed(context, "/home");
-    }
-  }
+  // void _verificarUsuarioLogado() async {
+  //   User? usuarioLogado = await _auth.currentUser;
+  //   if (usuarioLogado != null) {
+  //     verificaTipoUsuario(usuarioLogado);
+  //     //Navigator.pushReplacementNamed(context, "/home");
+  //   }
+  // }
 
-  void verificaTipoUsuario(User? user) async {
-    //Verificar e redirecionar para a tela específica
-    String uidUser = user!.uid;
-    DocumentSnapshot us =
-        await _firestore.collection("usuarios").doc("$uidUser").get();
+  // void verificaTipoUsuario(User? user) async {
+  //   //Verificar e redirecionar para a tela específica
+  //   String uidUser = user!.uid;
+  //   DocumentSnapshot us =
+  //       await _firestore.collection("usuarios").doc("$uidUser").get();
 
-    String tipo = us.get("tipoUsuario");
-    print("xxx tipo do usuário $tipo");
+  //   String tipo = us.get("tipoUsuario");
+  //   print("xxx tipo do usuário $tipo");
 
-    //QuerySnapshot snapshot =
-    //  await _firestore.collection("usuarios/$uidUser").get();
-    if (tipo == "admin") {
-      Navigator.pushReplacementNamed(context, "/dashboard");
-    } else if (tipo == "gerenciador") {
-      Navigator.pushReplacementNamed(context, "/gerenciador");
-    } else if (tipo == "cliente") {
-      Navigator.pushReplacementNamed(context, "/projetos");
-    }
-  }
+  //   //QuerySnapshot snapshot =
+  //   //  await _firestore.collection("usuarios/$uidUser").get();
+  //   if (tipo == "admin") {
+  //     Navigator.pushReplacementNamed(context, "/dashboard");
+  //   } else if (tipo == "gerenciador") {
+  //     Navigator.pushReplacementNamed(context, "/gerenciador");
+  //   } else if (tipo == "cliente") {
+  //     Navigator.pushReplacementNamed(context, "/projetos");
+  //   }
+  // }
 
   void _selecionarImagem() async {
     FilePickerResult? resultado = await FilePicker.platform.pickFiles(
@@ -95,7 +95,7 @@ class _CadastroPageeUsuarioState extends State<CadastroPageUsuario> {
             .set(usuario.toMap())
             .then((value) {
           //Rotas para outra tela
-          Navigator.pushReplacementNamed(context, "/projetos");
+          //Navigator.pushReplacementNamed(context, "/projetos");
         });
       });
     } else {
@@ -107,7 +107,7 @@ class _CadastroPageeUsuarioState extends State<CadastroPageUsuario> {
           .set(usuario.toMap())
           .then((value) {
         //Rotas para outra tela
-        Navigator.pushReplacementNamed(context, "/projetos");
+        //Navigator.pushReplacementNamed(context, "/projetos");
       });
     }
   }

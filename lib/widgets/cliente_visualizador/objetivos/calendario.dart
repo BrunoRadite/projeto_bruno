@@ -28,7 +28,7 @@ class _TelaCalendarioState extends State<TelaCalendario> {
                 iconSize: 20,
                 onPressed: () {
                   //Mudança de estado da data de Vencimento
-                  (mandalaController.indice.value != -1)
+                  (mandalaController.indiceObjective.value != -1)
                       ? showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
@@ -42,7 +42,7 @@ class _TelaCalendarioState extends State<TelaCalendario> {
                           mandalaController.changeDataVencimento(
                               Timestamp.fromDate(value),
                               mandalaController.listaObjectives[
-                                  mandalaController.indice.value]);
+                                  mandalaController.indiceObjective.value]);
                         })
                       // ignore: unnecessary_statements
                       : () {};
@@ -54,8 +54,8 @@ class _TelaCalendarioState extends State<TelaCalendario> {
               SizedBox(width: 12),
               Obx(() => Text(
                     (mandalaController.listaObjectives.length > 0 &&
-                            mandalaController.indice.value != -1)
-                        ? "${mandalaController.listaObjectives[mandalaController.indice.value].dataFormatada}"
+                            mandalaController.indiceObjective.value != -1)
+                        ? "${mandalaController.listaObjectives[mandalaController.indiceObjective.value].dataFormatada}"
                         : "",
                     style: TextStyle(
                       fontSize: 16,

@@ -80,10 +80,10 @@ class _LoginPageState extends State<LoginPage> {
     double larguraTela = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(widget.title),
-      ),
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   title: Text(widget.title),
+      // ),
       body: SingleChildScrollView(
         child: Container(
           color: PaletaCores.corPrimaria,

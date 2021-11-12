@@ -237,19 +237,52 @@ class _ManipulaOKRState extends State<ManipulaOKR> {
     debugPrint("||| Adicionando um novo objetivo ...");
     mandalaController.addOneObjective(
         "Novo objetivo ${mandalaController.listaObjectives.length + 1}");
+    
   }
 
   void adicionaResultado() {
-    debugPrint("||| Adicionando um novo resultado ...");
-    mandalaController.addOneResultado(
-        "Novo resultado ${mandalaController.listaResultados.length + 1}",
-        idObjetivoPai: mandalaController.ultimoObjetivoClicado.value);
+    if (mandalaController.ultimoObjetivoClicado.value != '') {
+      debugPrint("||| Adicionando um novo resultado ...");
+      mandalaController.addOneResultado(
+          "Novo resultado ${mandalaController.listaResultados.length + 1}",
+          idObjetivoPai: mandalaController.ultimoObjetivoClicado.value);
+    } else {
+      showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+                  title: Text("Nenhum Objetivo Selecionado"),
+                  content: Text(
+                      "Selecione algum objetivo para adicionar um resultado"),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: Text("OK")),
+                  ]));
+    }
   }
 
   void adicionaMetrica() {
-    debugPrint("||| Adicionando uma nova métrica ...");
-    mandalaController.addOneMetric(
-        "Nova métrica ${mandalaController.listaMetricas.length + 1} do ${mandalaController.nomeResultMandala}",
-        idResultado: mandalaController.ultimoResultadoClicado.value);
+    if (mandalaController.ultimoResultadoClicado.value != '') {
+      debugPrint("||| Adicionando uma nova métrica ...");
+      mandalaController.addOneMetric(
+          "Nova métrica ${mandalaController.listaMetricas.length + 1} do ${mandalaController.nomeResultMandala}",
+          idResultado: mandalaController.ultimoResultadoClicado.value);
+    } else {
+      showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+                  title: Text("Nenhum Resultado Selecionado"),
+                  content: Text(
+                      "Selecione algum resultado para adicionar uma métrica"),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: Text("OK")),
+                  ]));
+    }
   }
 }
